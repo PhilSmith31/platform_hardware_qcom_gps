@@ -32,7 +32,7 @@
 #include <dlfcn.h>
 #include <LocAdapterBase.h>
 #include <loc_target.h>
-#include <log_util.h>
+#include <platform_lib_log_util.h>
 #include <LocAdapterProxyBase.h>
 
 namespace loc_core {
@@ -72,6 +72,7 @@ void LocAdapterBase::
                    LocPosTechMask loc_technology_mask) {
     if (mLocAdapterProxyBase == NULL ||
         !mLocAdapterProxyBase->reportPosition(location,
+                                              locationExtended,
                                               status,
                                               loc_technology_mask)) {
         DEFAULT_IMPL()
@@ -79,11 +80,18 @@ void LocAdapterBase::
 }
 
 void LocAdapterBase::
-    reportSv(GpsSvStatus &svStatus,
+    reportSv(GnssSvStatus &svStatus,
              GpsLocationExtended &locationExtended,
              void* svExt)
 DEFAULT_IMPL()
 
+void LocAdapterBase::
+    reportSvMeasurement(GnssSvMeasurementSet &svMeasurementSet)
+DEFAULT_IMPL()
+
+void LocAdapterBase::
+    reportSvPolynomial(GnssSvPolynomial &svPolynomial)
+DEFAULT_IMPL()
 
 void LocAdapterBase::
     reportStatus(GpsStatusValue status)
@@ -136,6 +144,6 @@ bool LocAdapterBase::
 DEFAULT_IMPL(false)
 
 void LocAdapterBase::
-    reportGpsMeasurementData(GpsData &gpsMeasurementData)
+    reportGnssMeasurementData(GnssData &gnssMeasurementData)
 DEFAULT_IMPL()
 } // namespace loc_core

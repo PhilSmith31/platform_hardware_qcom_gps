@@ -1,4 +1,4 @@
-/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -24,20 +24,24 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  */
+#include "platform_lib_time.h"
 
-#ifndef LOC_ENG_NMEA_H
-#define LOC_ENG_NMEA_H
+#ifdef USE_GLIB
+#include <loc_stub_time.h>
+#else
+#include <utils/SystemClock.h>
+#endif /* USE_GLIB */
 
-#include <hardware/gps.h>
-#include <gps_extended.h>
+int64_t platform_lib_abstraction_elapsed_millis_since_boot()
+{
+#ifdef USE_GLIB
 
-#define NMEA_SENTENCE_MAX_LENGTH 200
+    return elapsedMillisSinceBoot();
 
-void loc_eng_nmea_send(char *pNmea, int length, loc_eng_data_s_type *loc_eng_data_p);
-int loc_eng_nmea_put_checksum(char *pNmea, int maxSize);
-void loc_eng_nmea_generate_sv(loc_eng_data_s_type *loc_eng_data_p, const GnssSvStatus &svStatus, const GpsLocationExtended &locationExtended);
-void loc_eng_nmea_generate_pos(loc_eng_data_s_type *loc_eng_data_p, const UlpLocation &location, const GpsLocationExtended &locationExtended, unsigned char generate_nmea);
+#else
 
-#endif // LOC_ENG_NMEA_H
+    return android::elapsedRealtime();
+
+#endif
+}
